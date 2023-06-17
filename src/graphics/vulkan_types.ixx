@@ -15,7 +15,9 @@ import lime.utils;
 export namespace lime {
 
     struct Transform {
-        glm::mat4 transform;
+        glm::vec3 position;
+        glm::quat rotation;
+        float scale = 1.0f;
     };
 
     struct AllocatedBuffer {

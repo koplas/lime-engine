@@ -76,14 +76,15 @@ export namespace lime {
             auto const monkey_1 = m_registry.create();
             m_registry.emplace<GPUMesh *>(monkey_1, monkey_mesh);
             m_registry.emplace<Material *>(monkey_1, m_engine->get_material("default_mesh"));
-            m_registry.emplace<Transform>(monkey_1, glm::mat4{1.0F});
+            Transform transform = {.position = {0, 0, 0}, .rotation = {glm::vec3{0, 0, 0}}, .scale = 1};
+            m_registry.emplace<Transform>(monkey_1, transform);
             m_registry.emplace<GPUTexture *>(monkey_1, monkey_texture);
 
             auto const monkey_2 = m_registry.create();
             m_registry.emplace<GPUMesh *>(monkey_2, monkey_mesh);
             m_registry.emplace<Material *>(monkey_2, m_engine->get_material("default_mesh"));
-            glm::mat4 object_matrix = glm::translate(glm::mat4{1.0F}, glm::vec3(2, 0, 2));
-            m_registry.emplace<Transform>(monkey_2, object_matrix);
+            Transform transform2 = {.position = {2, 0, 2}, .rotation = {glm::vec3{60, 0, 0}}, .scale = 2};
+            m_registry.emplace<Transform>(monkey_2, transform2);
             m_registry.emplace<GPUTexture *>(monkey_2, monkey_black_texture);
 
             for (auto &light: m_game_state.lighting_buffer.point_lights) {

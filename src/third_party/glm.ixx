@@ -46,4 +46,5 @@ export {
 #include <glm/vec4.hpp>             // vec4, bvec4, dvec4, ivec4 and uvec4
 #include <glm/vector_relational.hpp>// all the GLSL vector relational functions: equal, less, etc.
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
 }

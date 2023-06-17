@@ -467,7 +467,9 @@ export namespace lime {
             auto *object_ssbo = std::bit_cast<glm::mat4 *>(frame.mapped_object_buffer);
             uint32_t index = 0;
             for (auto entity: view) {
-                object_ssbo[index] = view.get<Transform>(entity).transform;
+                auto transform = view.get<Transform>(entity);
+                auto object_matrix = glm::translate(glm::mat4{1.0}, transform.position) * glm::toMat4(transform.rotation) * transform.scale;
+                object_ssbo[index] = object_matrix;
                 auto &mesh = view.get<GPUMesh *>(entity);
                 auto &texture = view.get<GPUTexture *>(entity);
                 // Skip if upload is not completed
