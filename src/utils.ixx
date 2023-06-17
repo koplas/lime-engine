@@ -5,7 +5,7 @@ module;
 #include <mutex>
 #include <source_location>
 
-export module utils;
+export module lime.utils;
 
 import vulkan;
 

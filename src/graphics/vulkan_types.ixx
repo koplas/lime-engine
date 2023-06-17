@@ -6,11 +6,11 @@ module;
 #include <bit>
 
 
-export module vulkan_types;
+export module lime.vulkan_types;
 
 import vulkan;
 import glm;
-import utils;
+import lime.utils;
 
 export namespace lime {
 

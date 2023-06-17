@@ -5,7 +5,7 @@ module;
 #include <stdlib.h>
 
 
-export module Window;
+export module lime.Window;
 import vulkan;
 
 export struct Input {

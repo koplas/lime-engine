@@ -11,13 +11,13 @@ module;
 #include <vector>
 
 
-export module MaterialBuilder;
+export module lime.MaterialBuilder;
 
-import PipelineBuilder;
-import Mesh;
-import utils;
+import lime.PipelineBuilder;
+import lime.mesh;
+import lime.utils;
 import vulkan;
-import vulkan_types;
+import lime.vulkan_types;
 
 static void add_material(vk::Pipeline pipeline, vk::PipelineLayout layout, std::string const &name, std::unordered_map<std::string, lime::Material> &materials, std::list<vk::PipelineLayout> &pipeline_layouts) {
     auto it = std::ranges::find(pipeline_layouts, layout);

@@ -13,13 +13,13 @@ module;
 #include <vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
-export module Uploader;
+export module lime.Uploader;
 
 import vulkan;
 
-import Mesh;
-import utils;
-import vulkan_types;
+import lime.mesh;
+import lime.utils;
+import lime.vulkan_types;
 
 
 enum class UploadType {

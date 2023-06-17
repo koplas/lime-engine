@@ -22,15 +22,15 @@ module;
 
 #define VULKAN_HPP_DEFAULT_DISPATCHER vk::defaultDispatchLoaderDynamic
 
-export module Render;
+export module lime.Render;
 
-import MaterialBuilder;
+import lime.MaterialBuilder;
 import vulkan;
-import Uploader;
+import lime.Uploader;
 import glm;
-import utils;
+import lime.utils;
 import entt;
-import vulkan_types;
+import lime.vulkan_types;
 
 #ifndef NDEBUG
 constexpr bool ENABLE_VALIDATION_LAYERS = true;

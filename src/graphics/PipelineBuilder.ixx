@@ -5,11 +5,11 @@ module;
 #include <vector>
 #include <vulkan/vulkan.h>
 
-export module PipelineBuilder;
+export module lime.PipelineBuilder;
 
-import Mesh;
+import lime.mesh;
 import vulkan;
-import vulkan_types;
+import lime.vulkan_types;
 
 export namespace lime {
     class PipelineBuilder {

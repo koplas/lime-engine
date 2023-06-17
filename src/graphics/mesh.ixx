@@ -9,11 +9,11 @@ module;
 #include <tiny_gltf.h>
 
 
-export module Mesh;
+export module lime.mesh;
 import vulkan;
 import glm;
-import utils;
-import vulkan_types;
+import lime.utils;
+import lime.vulkan_types;
 
 export namespace lime::mesh {
     struct VertexInputDescription {

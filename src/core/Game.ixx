@@ -6,15 +6,15 @@ module;
 
 #include <optional>
 
-export module Game;
+export module lime.Game;
 
-import Render;
-import Window;
-import utils;
+import lime.Render;
+import lime.Window;
+import lime.utils;
 import glm;
 import vulkan;
 import entt;
-import vulkan_types;
+import lime.vulkan_types;
 
 export namespace lime {
     class Game {
