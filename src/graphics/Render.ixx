@@ -4,16 +4,17 @@ module;
 //Todo remove iostream
 #include <iostream>
 
+#include <algorithm>
+#include <bit>
 #include <cstring>
-#include <optional>
 #include <list>
 #include <mutex>
+#include <optional>
 #include <set>
 #include <string>
 #include <unordered_map>
 #include <variant>
 #include <vector>
-#include <bit>
 #include <vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
@@ -763,6 +764,11 @@ private:
             image_count = 2;
         }
 
+        m_window_extent = {
+                std::clamp(m_window_extent.width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width),
+                std::clamp(m_window_extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height),
+        };
+
         auto old_swapchain = m_swapchain;
         vk::SwapchainCreateInfoKHR const create_info{
                 .surface = m_surface,
@@ -783,7 +789,7 @@ private:
         result = m_device.createSwapchainKHR(&create_info, nullptr, &m_swapchain);
         vk_assert(result);
 
-        if(old_swapchain) {
+        if (old_swapchain) {
             m_device.destroy(old_swapchain);
         }
 
