@@ -12,7 +12,7 @@ import vulkan;
 import glm;
 import utils;
 
-export {
+export namespace lime {
 
     struct Transform {
         glm::mat4 transform;
@@ -44,7 +44,7 @@ export {
                                       std::bit_cast<VkBufferCreateInfo const *>(&buffer_create_info), &vma_alloc_info,
                                       &new_buffer.buffer, &new_buffer.allocation,
                                       nullptr);
-        vk_assert(std::bit_cast<vk::Result>(result));
+        lime::utils::vk_assert(std::bit_cast<vk::Result>(result));
         return new_buffer;
     }
 
@@ -105,4 +105,4 @@ export {
         SceneData scene_data;
         LightingBuffer lighting_buffer;
     };
-}
+}// namespace lime

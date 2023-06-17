@@ -1,6 +1,6 @@
 import Game;
 
 int main() {
-    Game game = {};
+    lime::Game game = {};
     game.run();
 }
