@@ -42,7 +42,6 @@ export namespace lime {
         void run() {
             Input input = {};
             auto last_frame = std::chrono::high_resolution_clock::now();
-            bool out_of_date_swapchain = false;
             do {
                 auto now = std::chrono::high_resolution_clock::now();
                 m_step = (float) std::chrono::duration_cast<std::chrono::nanoseconds>(now - last_frame).count() / (1000.0F * 1000.0F * 1000.0F);
@@ -54,20 +53,14 @@ export namespace lime {
                     m_window.enable_cursor();
                 }
 
-                while (out_of_date_swapchain || input.window_resized) {
-                    // Todo maybe move this into Render module
-                    m_window_extent = m_window.get_framebuffer_size();
+                while (input.window_resized) {
                     m_engine->set_extent(m_window_extent);
                     m_engine->recreate_swapchain();
-                    out_of_date_swapchain = false;
                     input = m_window.poll_input();
                 }
 
                 update_camera(input);
-                if (!m_engine->draw(m_registry, m_game_state)) {
-                    out_of_date_swapchain = true;
-                    utils::log_info("Out of date swapchain");
-                }
+                m_engine->draw(m_registry, m_game_state);
             } while (!input.should_window_close);
         };
 

@@ -3,6 +3,9 @@ module;
 #include <filesystem>
 #include <iostream>
 #include <mutex>
+#include <chrono>
+#include <iomanip>
+#include <ctime>
 #include <source_location>
 
 export module lime.utils;
@@ -23,6 +26,15 @@ void find_asset_dir() {
     ASSET_DIR = dir;
 }
 
+std::string get_time() {
+    std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm ltime;
+    localtime_r(&t, &ltime);
+    std::stringstream time_string{};
+    time_string << std::put_time(&ltime, "%H:%M:%S");
+    return time_string.str();
+}
+
 export namespace lime::utils {
     void vk_assert(vk::Result result, std::string_view message = "vk_assert failed", std::source_location location = std::source_location::current()) {
         if (result != vk::Result::eSuccess) {
@@ -39,11 +51,11 @@ export namespace lime::utils {
     }
 
     void log_info(std::string_view message) {
-        std::cout << "[INFO] " << message << "\n";
+        std::cout << get_time() << " [INFO] " << message << "\n";
     }
 
     void log_error(std::string_view message) {
-        std::cout << "[ERROR] " << message << "\n";
+        std::cout << get_time() << " [ERROR] " << message << "\n";
     }
 
     std::string_view get_asset_dir() {

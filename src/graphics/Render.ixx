@@ -222,27 +222,37 @@ export namespace lime {
             m_instance.destroy();
         };
 
-        bool draw(entt::registry &registry, GameState const &game_state) {
+        void draw(entt::registry &registry, GameState const &game_state) {
+            static bool out_of_date_swapchain = false;
+
+            vk::Result result = {};
+
+            auto &frame = get_current_frame();
+            uint32_t swapchain_image_index = 0;
+            constexpr auto swapchain_timeout = 100ULL * 1000ULL * 1000ULL * 1000ULL;
+            do {
+               if(out_of_date_swapchain) {
+                   recreate_swapchain();
+               }
+               result = m_device.acquireNextImageKHR(m_swapchain, swapchain_timeout,
+                                                     frame.present_semaphore, nullptr,
+                                                     &swapchain_image_index);
+               out_of_date_swapchain = result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR;
+            } while(out_of_date_swapchain);
+
+            if (result == vk::Result::eTimeout) {
+                utils::log_info("Swapchain timeout retry later");
+                return;
+            }
+
+            utils::vk_assert(result);
+
             bool texture_updated = false;
             m_uploader->poll_uploads(m_meshes, m_textures, texture_updated);
             if (texture_updated) {
                 m_texture_update++;
             }
 
-            auto &frame = get_current_frame();
-            uint32_t swapchain_image_index = 0;
-            constexpr auto swapchain_timeout = 100ULL * 1000ULL * 1000ULL * 1000ULL;
-            auto result = m_device.acquireNextImageKHR(m_swapchain, swapchain_timeout,
-                                                       frame.present_semaphore, nullptr,
-                                                       &swapchain_image_index);
-            if (result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR) {
-                return false;
-            }
-            if (result == vk::Result::eTimeout) {
-                utils::log_info("Swapchain timeout retry later");
-                return true;
-            }
-            utils::vk_assert(result);
 
             constexpr auto fence_timeout = 1000ULL * 1000ULL * 1000ULL;
             result = m_device.waitForFences(1, &frame.render_fence, true, fence_timeout);
@@ -372,10 +382,10 @@ export namespace lime {
 
             result = m_graphics_queue.presentKHR(&present_info);
             if (result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR) {
-                return false;
+                out_of_date_swapchain = true;
+            } else {
+                utils::vk_assert(result);
             }
-            utils::vk_assert(result);
-            return true;
         };
 
         Material *get_material(std::string_view name) {
@@ -407,6 +417,7 @@ export namespace lime {
         };
 
         void recreate_swapchain() {
+            utils::log_info("Recreate swapchain");
             std::scoped_lock<std::mutex> const guard(m_graphics_queue_mutex);
             utils::vk_assert(m_device.waitIdle());
             cleanup_render_targets();
@@ -787,6 +798,11 @@ export namespace lime {
                     std::clamp(m_window_extent.width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width),
                     std::clamp(m_window_extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height),
             };
+            vk::Extent2D min_extent = {0, 0};
+            vk::Extent2D max_extent = {0xFFFFFFFF, 0xFFFFFFFF};
+            if (surface_capabilities.currentExtent != min_extent && surface_capabilities.currentExtent != max_extent) {
+                m_window_extent = surface_capabilities.currentExtent;
+            }
 
             auto old_swapchain = m_swapchain;
             vk::SwapchainCreateInfoKHR const create_info{
