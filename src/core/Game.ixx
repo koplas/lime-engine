@@ -114,8 +114,8 @@ export namespace lime {
 
             float const camera_speed = 5.00F * m_step;
             auto &camera = m_game_state.camera;
-            const glm::vec3 cam_up = camera.rotation * glm::vec3{0.F, 1.F, 0.F};
-            const glm::vec3 cam_forward = camera.rotation * glm::vec3{0.F, 0.F, 1.F};
+            const glm::vec3 cam_left = glm::vec3{1.F, 0.F, 0.F} * camera.rotation;
+            const glm::vec3 cam_forward = glm::vec3{0.F, 0.F, 1.F} * camera.rotation;
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                 camera.position += camera_speed * cam_forward;
             }
@@ -123,10 +123,10 @@ export namespace lime {
                 camera.position -= camera_speed * cam_forward;
             }
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                camera.position -= glm::normalize(glm::cross(cam_forward, cam_up)) * camera_speed;
+                camera.position += camera_speed * cam_left;
             }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                camera.position += glm::normalize(glm::cross(cam_forward, cam_up)) * camera_speed;
+                camera.position -= camera_speed * cam_left;
             }
 
             static float last_x = 0.F;
@@ -152,8 +152,7 @@ export namespace lime {
             // glm::quat q_roll = glm::angleAxis(0.0F ,glm::vec3(0,0,1));
 
             glm::quat orientation = glm::normalize(q_pitch * q_yaw);
-            camera.rotation *= orientation;
-
+            camera.rotation = orientation * camera.rotation;
 
             m_game_state.camera.fov = 70.0F;
         };
