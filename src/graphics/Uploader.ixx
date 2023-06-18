@@ -2,7 +2,6 @@ module;
 
 #include <condition_variable>
 #include <cstring>
-#include <iostream>
 #include <mutex>
 #include <queue>
 #include <stb_image.h>
@@ -403,7 +402,7 @@ export namespace lime {
             stbi_uc *pixels = stbi_load(file.c_str(), &tex_width, &tex_height, &tex_channels, STBI_rgb_alpha);
 
             if (pixels == nullptr) {
-                std::cout << "Failed to load texture file " << file << std::endl;
+                utils::log_error("Failed to load texture file " + file);
                 return false;
             }
 

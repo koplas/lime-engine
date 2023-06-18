@@ -1,9 +1,5 @@
 module;
 
-
-//Todo remove iostream
-#include <iostream>
-
 #include <algorithm>
 #include <bit>
 #include <cstring>
@@ -88,21 +84,22 @@ extern "C" VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeve
 
         (void) pUserData;
         std::string severity;
+        std::string message;
         switch (messageSeverity) {
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-                std::cout << BLUE;
+                message += BLUE;
                 severity = "Verbose";
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-                std::cout << RED;
+                message += RED;
                 severity = "Error";
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-                std::cout << BLUE;
+                message += BLUE;
                 severity = "Info";
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-                std::cout << YELLOW;
+                message += YELLOW;
                 severity = "Warning";
                 break;
             default:
@@ -124,7 +121,8 @@ extern "C" VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeve
                 type = "other";
                 break;
         }
-        std::cout << severity << ", " << type << ": " << pCallbackData->pMessage << RESET << std::endl;
+        message += severity + ", " + type + ": " + pCallbackData->pMessage + std::string{RESET};
+        lime::utils::log_info(message);
     }
     return VK_FALSE;
 }
@@ -135,7 +133,7 @@ export namespace lime {
     public:
         Render(GLFWwindow *window, vk::Extent2D window_extent) : m_window_extent{window_extent} {
             if constexpr (ENABLE_VALIDATION_LAYERS) {
-                std::cout << "Enable validation layers" << std::endl;
+                utils::log_info("Enable validation layers");
             }
             init_instance(window);
             init_device();
@@ -241,7 +239,7 @@ export namespace lime {
                 return false;
             }
             if (result == vk::Result::eTimeout) {
-                std::cerr << "Swapchain timeout retry later" << std::endl;
+                utils::log_info("Swapchain timeout retry later");
                 return true;
             }
             utils::vk_assert(result);
@@ -688,7 +686,7 @@ export namespace lime {
                     }
                 }
             }
-            std::cout << "Using: " << m_gpu_properties.deviceName << std::endl;
+            utils::log_info("Using: " + std::string{m_gpu_properties.deviceName});
             utils::assert_true(found_device);
 
             auto queue_families = m_physical_device.getQueueFamilyProperties();

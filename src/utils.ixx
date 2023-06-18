@@ -42,6 +42,10 @@ export namespace lime::utils {
         std::cout << "[INFO] " << message << "\n";
     }
 
+    void log_error(std::string_view message) {
+        std::cout << "[ERROR] " << message << "\n";
+    }
+
     std::string_view get_asset_dir() {
         std::call_once(ASSET_DIR_FLAG, []() { find_asset_dir(); });
         return ASSET_DIR;
