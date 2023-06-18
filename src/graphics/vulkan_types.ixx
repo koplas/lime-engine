@@ -76,8 +76,9 @@ export namespace lime {
     };
 
     struct Camera {
-        glm::mat4 view;
-        glm::mat4 proj;
+        glm::vec3 position;
+        glm::quat rotation;
+        float fov;
     };
 
     struct SceneData {
@@ -98,7 +99,6 @@ export namespace lime {
     auto constexpr LIGHT_COUNT = 16;
 
     struct LightingBuffer {
-        glm::mat4 inv_viewproj;
         std::array<Light, LIGHT_COUNT> point_lights;
     };
 

@@ -1,8 +1,8 @@
 #version 450
 
-layout(input_attachment_index = 0, binding = 0) uniform subpassInputMS i_albedo;
-layout(input_attachment_index = 1, binding = 1) uniform subpassInputMS i_normal;
-layout(input_attachment_index = 2, binding = 2) uniform subpassInputMS i_depth;
+layout(input_attachment_index = 0, binding = 1) uniform subpassInputMS i_albedo;
+layout(input_attachment_index = 1, binding = 2) uniform subpassInputMS i_normal;
+layout(input_attachment_index = 2, binding = 3) uniform subpassInputMS i_depth;
 
 layout(constant_id = 0) const uint MSAA_SAMPLE_COUNT = 1;
 
@@ -15,9 +15,13 @@ layout(location = 0) out vec4 o_color;
 
 #define POINT_LIGHT_COUNT 16
 
-
-layout(set = 0, binding = 3) uniform GlobalUniform {
+layout(set = 0, binding = 0) uniform CameraBuffer {
+    mat4 view;
+    mat4 proj;
     mat4 inv_view_proj;
+} Camera;
+
+layout(set = 0, binding = 4) uniform GlobalUniform {
     Light point_lights[POINT_LIGHT_COUNT];
 }
 global_uniform;
@@ -25,7 +29,7 @@ global_uniform;
 vec3 calculate_fragment_light(vec4 albedo, vec3 normal, float depth) {
         // Retrieve position from depth
         vec4 clip = vec4(in_uv * 2.0 - 1.0, depth, 1.0);
-        vec4 world_w = global_uniform.inv_view_proj * clip;
+        vec4 world_w = Camera.inv_view_proj * clip;
         vec3 pos = world_w.xyz / world_w.w;
         // Transform from [0,1] to [-1,1]
         normal = normalize(2.0 * normal - 1.0);

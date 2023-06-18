@@ -2,6 +2,7 @@ module;
 
 
 #include <GLFW/glfw3.h>
+#include <chrono>
 #include <math.h>
 
 #include <optional>
@@ -29,13 +30,24 @@ export namespace lime {
                     .ambient_color = {0.0F, 0.0F, 0.0F, 0.0F},
             };
 
+            m_game_state.camera = {
+                    .position = {0.0F, 0.0F, -12.0F},
+                    .rotation = glm::vec3{0.0F},
+                    .fov = 70.0F,
+            };
+
             init_scene();
         };
 
         void run() {
             Input input = {};
+            auto last_frame = std::chrono::high_resolution_clock::now();
             bool out_of_date_swapchain = false;
             do {
+                auto now = std::chrono::high_resolution_clock::now();
+                m_step = (float) std::chrono::duration_cast<std::chrono::nanoseconds>(now - last_frame).count() / (1000.0F * 1000.0F * 1000.0F);
+                last_frame = now;
+
                 input = m_window.poll_input();
 
                 if (glfwGetKey(m_window.get_window(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -66,6 +78,8 @@ export namespace lime {
 
         GameState m_game_state = {};
         entt::registry m_registry;
+
+        float m_step = 0.2F;
 
         void init_scene() {
             GPUTexture *monkey_texture = m_engine->get_texture("monkey");
@@ -98,22 +112,21 @@ export namespace lime {
         void update_camera(Input input) {
             auto *window = m_window.get_window();
 
-            static glm::vec3 cam_pos = {0.F, -6.F, 10.F};
-            static glm::vec3 camera_front = {0.0F, 0.0F, -1.0F};
-
-            float const cameraSpeed = 0.05F;
-            const glm::vec3 cam_up = {0.F, 1.F, 0.F};
+            float const camera_speed = 5.00F * m_step;
+            auto &camera = m_game_state.camera;
+            const glm::vec3 cam_up = camera.rotation * glm::vec3{0.F, 1.F, 0.F};
+            const glm::vec3 cam_forward = camera.rotation * glm::vec3{0.F, 0.F, 1.F};
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                cam_pos += cameraSpeed * camera_front;
+                camera.position += camera_speed * cam_forward;
             }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-                cam_pos -= cameraSpeed * camera_front;
+                camera.position -= camera_speed * cam_forward;
             }
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                cam_pos -= glm::normalize(glm::cross(camera_front, cam_up)) * cameraSpeed;
+                camera.position -= glm::normalize(glm::cross(cam_forward, cam_up)) * camera_speed;
             }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                cam_pos += glm::normalize(glm::cross(camera_front, cam_up)) * cameraSpeed;
+                camera.position += glm::normalize(glm::cross(cam_forward, cam_up)) * camera_speed;
             }
 
             static float last_x = 0.F;
@@ -130,36 +143,19 @@ export namespace lime {
             last_x = input.cursor_x;
             last_y = input.cursor_y;
 
-            float const sensitivity = 0.1F;
+            float const sensitivity = 1.00F * m_step;
             x_offset *= sensitivity;
             y_offset *= sensitivity;
 
-            static float yaw = -90.F;
-            static float pitch = 0.0F;
-            yaw += x_offset;
-            pitch += y_offset;
-            if (pitch > 89.9F) {
-                pitch = 89.9F;
-            }
-            if (pitch < -89.9F) {
-                pitch = -89.9F;
-            }
+            glm::quat q_pitch = glm::angleAxis(y_offset, glm::vec3(-1, 0, 0));
+            glm::quat q_yaw = glm::angleAxis(x_offset, glm::vec3(0, 1, 0));
+            // glm::quat q_roll = glm::angleAxis(0.0F ,glm::vec3(0,0,1));
 
-            glm::vec3 direction;
-            direction.x = cosf(glm::radians(yaw)) * cosf(glm::radians(pitch));
-            direction.y = sinf(glm::radians(pitch));
-            direction.z = sinf(glm::radians(yaw)) * cosf(glm::radians(pitch));
+            glm::quat orientation = glm::normalize(q_pitch * q_yaw);
+            camera.rotation *= orientation;
 
-            camera_front = glm::normalize(direction);
-            glm::mat4 view = glm::lookAt(cam_pos, cam_pos + camera_front, cam_up);
 
-            glm::mat4 projection = glm::perspective(glm::radians(70.F),
-                                                    (float) m_window_extent.width / (float) m_window_extent.height, 0.1F,
-                                                    20.0F);
-            projection[1][1] *= -1;
-
-            m_game_state.camera = {view, projection};
-            m_game_state.lighting_buffer.inv_viewproj = glm::inverse(projection * view);
+            m_game_state.camera.fov = 70.0F;
         };
     };
 }// namespace lime

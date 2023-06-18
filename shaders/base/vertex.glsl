@@ -13,8 +13,9 @@ layout(location = 1) out vec2 o_uv;
 layout(set = 0, binding = 0) uniform CameraBuffer {
     mat4 view;
     mat4 proj;
-}
-Camera;
+    mat4 inv_view_proj;
+} Camera;
+
 
 layout(std140, set = 0, binding = 1) readonly buffer ObjectBuffer {
     mat4 objects[];

@@ -6,10 +6,11 @@ layout(location = 1) in vec2 in_uv;
 layout(location = 0) out vec4 o_albedo;
 layout(location = 1) out vec4 o_normal;
 
-//layout(set = 0, binding = 0) uniform CameraBuffer {
-//    mat4 view;
-//    mat4 proj;
-//} Camera;
+layout(set = 0, binding = 0) uniform CameraBuffer {
+    mat4 view;
+    mat4 proj;
+    mat4 inv_view_proj;
+} Camera;
 
 layout(set = 0, binding = 2) uniform SceneData {
     vec4 fog_color;

@@ -68,6 +68,12 @@ struct FrameData {
     std::unordered_map<lime::GPUTexture *, uint32_t> material_indices;
 };
 
+struct GPUCamera {
+    glm::mat4 view;
+    glm::mat4 proj;
+    glm::mat4 inv_view_proj;
+};
+
 constexpr unsigned int FRAME_OVERLAP = 2;
 
 extern "C" VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -307,8 +313,20 @@ export namespace lime {
             };
             cmd.beginRenderPass(&rp_info, vk::SubpassContents::eInline);
 
+
+            auto &camera = game_state.camera;
+
+            glm::mat4 translate = glm::translate(glm::mat4(1.0F), camera.position);
+            glm::mat4 rotate = glm::mat4_cast(camera.rotation);
+            glm::mat4 view = rotate * translate;
+
+            glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float) m_window_extent.width / (float) m_window_extent.height, 0.1F, 20.0F);
+
+            projection[1][1] *= -1;
+            GPUCamera gpu_cam = {.view = view, .proj = projection, .inv_view_proj = glm::inverse(projection * view)};
+
             // Update uniform buffers
-            memcpy(frame.mapped_camera_buffer, &game_state.camera, sizeof(Camera));
+            memcpy(frame.mapped_camera_buffer, &gpu_cam, sizeof(GPUCamera));
 
             memcpy(frame.mapped_scene_buffer, &game_state.scene_data, sizeof(SceneData));
 
@@ -1188,7 +1206,7 @@ export namespace lime {
                     .binding = 0,
                     .descriptorType = vk::DescriptorType::eUniformBuffer,
                     .descriptorCount = 1,
-                    .stageFlags = vk::ShaderStageFlagBits::eVertex,
+                    .stageFlags = vk::ShaderStageFlagBits::eVertex | vk::ShaderStageFlagBits::eFragment,
             };
 
             vk::DescriptorSetLayoutBinding const object_binding = {
@@ -1236,34 +1254,34 @@ export namespace lime {
 
             // Lighting descriptor
             vk::DescriptorSetLayoutBinding const albedo_binding = {
-                    .binding = 0,
-                    .descriptorType = vk::DescriptorType::eInputAttachment,
-                    .descriptorCount = 1,
-                    .stageFlags = vk::ShaderStageFlagBits::eFragment,
-            };
-
-            vk::DescriptorSetLayoutBinding const normal_binding = {
                     .binding = 1,
                     .descriptorType = vk::DescriptorType::eInputAttachment,
                     .descriptorCount = 1,
                     .stageFlags = vk::ShaderStageFlagBits::eFragment,
             };
 
-            vk::DescriptorSetLayoutBinding const depth_binding = {
+            vk::DescriptorSetLayoutBinding const normal_binding = {
                     .binding = 2,
                     .descriptorType = vk::DescriptorType::eInputAttachment,
                     .descriptorCount = 1,
                     .stageFlags = vk::ShaderStageFlagBits::eFragment,
             };
 
-            vk::DescriptorSetLayoutBinding const lighting_uniform = {
+            vk::DescriptorSetLayoutBinding const depth_binding = {
                     .binding = 3,
+                    .descriptorType = vk::DescriptorType::eInputAttachment,
+                    .descriptorCount = 1,
+                    .stageFlags = vk::ShaderStageFlagBits::eFragment,
+            };
+
+            vk::DescriptorSetLayoutBinding const lighting_uniform = {
+                    .binding = 4,
                     .descriptorType = vk::DescriptorType::eUniformBuffer,
                     .descriptorCount = 1,
                     .stageFlags = vk::ShaderStageFlagBits::eFragment,
             };
 
-            std::array<vk::DescriptorSetLayoutBinding, 4> lighting_bindings = {albedo_binding, normal_binding, depth_binding, lighting_uniform};
+            std::array<vk::DescriptorSetLayoutBinding, 5> lighting_bindings = {cam_buffer_binding, albedo_binding, normal_binding, depth_binding, lighting_uniform};
             vk::DescriptorSetLayoutCreateInfo const lighting_set_info = {
                     .bindingCount = lighting_bindings.size(),
                     .pBindings = lighting_bindings.data(),
@@ -1277,7 +1295,7 @@ export namespace lime {
                 frame.object_buffer = create_buffer(m_allocator, sizeof(Transform) * MAX_OBJECTS,
                                                     vk::BufferUsageFlagBits::eStorageBuffer, VMA_MEMORY_USAGE_CPU_TO_GPU);
 
-                frame.camera_buffer = create_buffer(m_allocator, sizeof(Camera), vk::BufferUsageFlagBits::eUniformBuffer,
+                frame.camera_buffer = create_buffer(m_allocator, sizeof(GPUCamera), vk::BufferUsageFlagBits::eUniformBuffer,
                                                     VMA_MEMORY_USAGE_CPU_TO_GPU);
 
                 frame.scene_buffer = create_buffer(m_allocator, sizeof(SceneData), vk::BufferUsageFlagBits::eUniformBuffer,
@@ -1316,7 +1334,7 @@ export namespace lime {
                 vk::DescriptorBufferInfo const camera_info = {
                         .buffer = std::bit_cast<vk::Buffer>(frame.camera_buffer.buffer),
                         .offset = 0,
-                        .range = sizeof(Camera),
+                        .range = sizeof(GPUCamera),
                 };
 
                 vk::DescriptorBufferInfo const scene_info = {
@@ -1345,6 +1363,15 @@ export namespace lime {
                         .pBufferInfo = &camera_info,
                 };
 
+                // Todo merge all into one descriptor
+                vk::WriteDescriptorSet const camera_write_lighting = {
+                        .dstSet = frame.lighting_descriptor,
+                        .dstBinding = 0,
+                        .descriptorCount = 1,
+                        .descriptorType = vk::DescriptorType::eUniformBuffer,
+                        .pBufferInfo = &camera_info,
+                };
+
                 vk::WriteDescriptorSet const object_write = {
                         .dstSet = frame.main_descriptor,
                         .dstBinding = 1,
@@ -1363,13 +1390,13 @@ export namespace lime {
 
                 vk::WriteDescriptorSet const lighting_write = {
                         .dstSet = frame.lighting_descriptor,
-                        .dstBinding = 3,
+                        .dstBinding = 4,
                         .descriptorCount = 1,
                         .descriptorType = vk::DescriptorType::eUniformBuffer,
                         .pBufferInfo = &lighting_info,
                 };
 
-                std::array<vk::WriteDescriptorSet, 4> set_writes = {camera_write, object_write, scene_write, lighting_write};
+                std::array<vk::WriteDescriptorSet, 5> set_writes = {camera_write, camera_write_lighting, object_write, scene_write, lighting_write};
 
                 m_device.updateDescriptorSets(set_writes.size(), set_writes.data(), 0, nullptr);
             }
@@ -1397,7 +1424,7 @@ export namespace lime {
 
                 vk::WriteDescriptorSet const color_image_write = {
                         .dstSet = frame.lighting_descriptor,
-                        .dstBinding = 0,
+                        .dstBinding = 1,
                         .descriptorCount = 1,
                         .descriptorType = vk::DescriptorType::eInputAttachment,
                         .pImageInfo = &color_image,
@@ -1405,7 +1432,7 @@ export namespace lime {
 
                 vk::WriteDescriptorSet const normal_image_write = {
                         .dstSet = frame.lighting_descriptor,
-                        .dstBinding = 1,
+                        .dstBinding = 2,
                         .descriptorCount = 1,
                         .descriptorType = vk::DescriptorType::eInputAttachment,
                         .pImageInfo = &normal_image,
@@ -1413,7 +1440,7 @@ export namespace lime {
 
                 vk::WriteDescriptorSet const depth_image_write = {
                         .dstSet = frame.lighting_descriptor,
-                        .dstBinding = 2,
+                        .dstBinding = 3,
                         .descriptorCount = 1,
                         .descriptorType = vk::DescriptorType::eInputAttachment,
                         .pImageInfo = &depth_image,
