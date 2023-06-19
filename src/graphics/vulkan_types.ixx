@@ -3,6 +3,7 @@ module;
 #include <vk_mem_alloc.h>
 
 #include <array>
+#include <string>
 #include <bit>
 
 
@@ -18,6 +19,12 @@ export namespace lime {
         glm::vec3 position;
         glm::quat rotation;
         float scale = 1.0f;
+    };
+
+    struct Model {
+        std::string mesh;
+        std::string albedo_texture;
+        std::string normal_texture;
     };
 
     struct AllocatedBuffer {

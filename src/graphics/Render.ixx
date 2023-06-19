@@ -231,14 +231,14 @@ export namespace lime {
             uint32_t swapchain_image_index = 0;
             constexpr auto swapchain_timeout = 100ULL * 1000ULL * 1000ULL * 1000ULL;
             do {
-               if(out_of_date_swapchain) {
-                   recreate_swapchain();
-               }
-               result = m_device.acquireNextImageKHR(m_swapchain, swapchain_timeout,
-                                                     frame.present_semaphore, nullptr,
-                                                     &swapchain_image_index);
-               out_of_date_swapchain = result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR;
-            } while(out_of_date_swapchain);
+                if (out_of_date_swapchain) {
+                    recreate_swapchain();
+                }
+                result = m_device.acquireNextImageKHR(m_swapchain, swapchain_timeout,
+                                                      frame.present_semaphore, nullptr,
+                                                      &swapchain_image_index);
+                out_of_date_swapchain = result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR;
+            } while (out_of_date_swapchain);
 
             if (result == vk::Result::eTimeout) {
                 utils::log_info("Swapchain timeout retry later");
@@ -396,24 +396,20 @@ export namespace lime {
             return &it->second;
         };
 
-        GPUMesh *get_mesh(std::string_view name) {
+        void load_mesh(std::string_view name) {
             auto const it = m_meshes.find(std::string{name});
             if (it == m_meshes.end()) {
                 m_meshes[std::string{name}];
                 m_uploader->queue_mesh_upload(name);
-                return &(m_meshes.find(std::string{name}))->second;
             }
-            return &it->second;
         };
 
-        GPUTexture *get_texture(std::string_view name) {
+        void load_texture(std::string_view name) {
             auto const it = m_textures.find(std::string{name});
             if (it == m_textures.end()) {
                 m_textures[std::string{name}];
                 m_uploader->queue_image_upload(name);
-                return &(m_textures.find(std::string{name}))->second;
             }
-            return &it->second;
         };
 
         void recreate_swapchain() {
@@ -489,36 +485,34 @@ export namespace lime {
         void draw_objects(vk::CommandBuffer cmd, entt::registry &registry) {
             auto &frame = get_current_frame();
 
-            auto const view = registry.view<GPUMesh *, Material *, GPUTexture *, Transform>();
+            auto const view = registry.view<Model, Transform>();
 
             auto *object_ssbo = std::bit_cast<glm::mat4 *>(frame.mapped_object_buffer);
             uint32_t index = 0;
             for (auto entity: view) {
+                auto &model = view.get<Model>(entity);
+                auto *mesh = &m_meshes[model.mesh];
+                auto *texture = &m_textures[model.albedo_texture];
                 auto transform = view.get<Transform>(entity);
                 auto object_matrix = glm::translate(glm::mat4{1.0}, transform.position) * glm::toMat4(transform.rotation) * transform.scale;
                 object_ssbo[index] = object_matrix;
-                auto &mesh = view.get<GPUMesh *>(entity);
-                auto &texture = view.get<GPUTexture *>(entity);
                 // Skip if upload is not completed
                 if ((mesh->vertex_buffer.buffer == nullptr) || (mesh->index_buffer.buffer == nullptr) ||
                     !texture->image.image) {
                     continue;
                 }
                 index++;
-                auto const *bones = registry.try_get<Bones>(entity);
-                if (bones != nullptr) {
-                    for (auto const &bone: bones->bones) {
-                        object_ssbo[index] = bone;
-                        index++;
-                    }
-                }
             }
 
             GPUMesh const *last_mesh = nullptr;
             Material const *last_material = nullptr;
 
             index = 0;
-            for (auto [entity, mesh, material, texture, transform]: view.each()) {
+            auto *material = &m_materials["default_material"];
+            for (auto [entity, model, transform]: view.each()) {
+                auto *mesh = &m_meshes[model.mesh];
+                auto *texture = &m_textures[model.albedo_texture];
+
                 if ((mesh->vertex_buffer.buffer == nullptr) || (mesh->index_buffer.buffer == nullptr) ||
                     !texture->image.image) {
                     continue;
@@ -548,11 +542,6 @@ export namespace lime {
                 }
                 cmd.drawIndexed(mesh->index_count, 1, mesh->first_index, mesh->vertex_offset, 0);
                 index++;
-
-                auto const *bones = registry.try_get<Bones>(entity);
-                if (bones != nullptr) {
-                    index += bones->bones.size();
-                }
             }
         };
 

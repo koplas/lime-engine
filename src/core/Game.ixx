@@ -75,24 +75,20 @@ export namespace lime {
         float m_step = 0.2F;
 
         void init_scene() {
-            GPUTexture *monkey_texture = m_engine->get_texture("monkey");
-            GPUTexture *monkey_black_texture = m_engine->get_texture("monkey_black");
+            m_engine->load_texture("monkey");
+            m_engine->load_texture("monkey_black");
 
-            GPUMesh *monkey_mesh = m_engine->get_mesh("monkey");
+            m_engine->load_mesh("monkey");
 
             auto const monkey_1 = m_registry.create();
-            m_registry.emplace<GPUMesh *>(monkey_1, monkey_mesh);
-            m_registry.emplace<Material *>(monkey_1, m_engine->get_material("default_mesh"));
+            m_registry.emplace<Model>(monkey_1, Model{.mesh = "monkey", .albedo_texture = "monkey"});
             Transform transform = {.position = {0, 0, 0}, .rotation = {glm::vec3{0, 0, 0}}, .scale = 1};
             m_registry.emplace<Transform>(monkey_1, transform);
-            m_registry.emplace<GPUTexture *>(monkey_1, monkey_texture);
 
             auto const monkey_2 = m_registry.create();
-            m_registry.emplace<GPUMesh *>(monkey_2, monkey_mesh);
-            m_registry.emplace<Material *>(monkey_2, m_engine->get_material("default_mesh"));
+            m_registry.emplace<Model>(monkey_2, Model{.mesh = "monkey", .albedo_texture = "monkey_black"});
             Transform transform2 = {.position = {2, 0, 2}, .rotation = {glm::vec3{60, 0, 0}}, .scale = 2};
             m_registry.emplace<Transform>(monkey_2, transform2);
-            m_registry.emplace<GPUTexture *>(monkey_2, monkey_black_texture);
 
             for (auto &light: m_game_state.lighting_buffer.point_lights) {
                 light.position = {1.0f, 1.0f, 1.0f, 1.0f};

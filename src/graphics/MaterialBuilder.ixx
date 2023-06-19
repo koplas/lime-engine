@@ -88,7 +88,7 @@ export namespace lime {
 
             vk::Pipeline const pipeline = pipeline_builder.build_pipeline(device, renderpass);
 
-            add_material(pipeline, pipeline_layout, "default_mesh", materials, pipeline_layouts);
+            add_material(pipeline, pipeline_layout, "default_material", materials, pipeline_layouts);
 
             // Built skinning shader
             mesh::VertexInputDescription vertex_input_description_skinning = mesh::VertexBone::get_vertex_description();
