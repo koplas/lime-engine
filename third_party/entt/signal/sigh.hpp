@@ -1,12 +1,6 @@
 #ifndef ENTT_SIGNAL_SIGH_HPP
 #define ENTT_SIGNAL_SIGH_HPP
 
-#include <algorithm>
-#include <functional>
-#include <iterator>
-#include <type_traits>
-#include <utility>
-#include <vector>
 #include "../config/config.h"
 #include "delegate.hpp"
 #include "fwd.hpp"

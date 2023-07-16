@@ -1,9 +1,6 @@
 #ifndef ENTT_RESOURCE_HANDLE_HPP
 #define ENTT_RESOURCE_HANDLE_HPP
 
-#include <memory>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "fwd.hpp"
 

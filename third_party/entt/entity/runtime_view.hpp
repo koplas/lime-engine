@@ -1,11 +1,6 @@
 #ifndef ENTT_ENTITY_RUNTIME_VIEW_HPP
 #define ENTT_ENTITY_RUNTIME_VIEW_HPP
 
-#include <algorithm>
-#include <iterator>
-#include <type_traits>
-#include <utility>
-#include <vector>
 #include "../config/config.h"
 #include "entity.hpp"
 #include "fwd.hpp"

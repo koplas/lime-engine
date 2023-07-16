@@ -1,11 +1,6 @@
 #ifndef ENTT_PROCESS_SCHEDULER_HPP
 #define ENTT_PROCESS_SCHEDULER_HPP
 
-#include <algorithm>
-#include <memory>
-#include <type_traits>
-#include <utility>
-#include <vector>
 #include "../config/config.h"
 #include "process.hpp"
 

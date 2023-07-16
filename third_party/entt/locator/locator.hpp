@@ -1,8 +1,6 @@
 #ifndef ENTT_LOCATOR_LOCATOR_HPP
 #define ENTT_LOCATOR_LOCATOR_HPP
 
-#include <memory>
-#include <utility>
 #include "../config/config.h"
 
 namespace entt {

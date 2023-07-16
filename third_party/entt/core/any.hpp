@@ -1,10 +1,6 @@
 #ifndef ENTT_CORE_ANY_HPP
 #define ENTT_CORE_ANY_HPP
 
-#include <cstddef>
-#include <memory>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../core/utility.hpp"
 #include "fwd.hpp"

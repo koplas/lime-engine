@@ -1,9 +1,6 @@
 #ifndef ENTT_CORE_ITERATOR_HPP
 #define ENTT_CORE_ITERATOR_HPP
 
-#include <iterator>
-#include <memory>
-#include <utility>
 #include "../config/config.h"
 
 namespace entt {

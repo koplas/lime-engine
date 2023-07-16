@@ -1,9 +1,6 @@
 #ifndef ENTT_CORE_IDENT_HPP
 #define ENTT_CORE_IDENT_HPP
 
-#include <cstddef>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "fwd.hpp"
 #include "type_traits.hpp"

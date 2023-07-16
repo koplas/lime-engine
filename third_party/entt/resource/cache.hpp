@@ -1,8 +1,6 @@
 #ifndef ENTT_RESOURCE_CACHE_HPP
 #define ENTT_RESOURCE_CACHE_HPP
 
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../container/dense_map.hpp"
 #include "../core/fwd.hpp"

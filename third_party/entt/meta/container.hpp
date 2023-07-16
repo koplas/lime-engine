@@ -1,13 +1,6 @@
 #ifndef ENTT_META_CONTAINER_HPP
 #define ENTT_META_CONTAINER_HPP
 
-#include <array>
-#include <map>
-#include <set>
-#include <type_traits>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
 #include "../container/dense_map.hpp"
 #include "../container/dense_set.hpp"
 #include "meta.hpp"

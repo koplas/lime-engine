@@ -1,9 +1,6 @@
 #ifndef ENTT_PROCESS_PROCESS_HPP
 #define ENTT_PROCESS_PROCESS_HPP
 
-#include <cstdint>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 
 namespace entt {

@@ -1,11 +1,6 @@
 #ifndef ENTT_ENTITY_ORGANIZER_HPP
 #define ENTT_ENTITY_ORGANIZER_HPP
 
-#include <algorithm>
-#include <cstddef>
-#include <type_traits>
-#include <utility>
-#include <vector>
 #include "../container/dense_map.hpp"
 #include "../core/type_info.hpp"
 #include "../core/type_traits.hpp"

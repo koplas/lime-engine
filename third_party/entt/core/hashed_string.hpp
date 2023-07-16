@@ -1,8 +1,6 @@
 #ifndef ENTT_CORE_HASHED_STRING_HPP
 #define ENTT_CORE_HASHED_STRING_HPP
 
-#include <cstddef>
-#include <cstdint>
 #include "../config/config.h"
 #include "fwd.hpp"
 

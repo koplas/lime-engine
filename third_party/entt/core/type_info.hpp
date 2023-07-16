@@ -1,9 +1,6 @@
 #ifndef ENTT_CORE_TYPE_INFO_HPP
 #define ENTT_CORE_TYPE_INFO_HPP
 
-#include <string_view>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../core/attribute.h"
 #include "fwd.hpp"

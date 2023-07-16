@@ -1,7 +1,6 @@
 #ifndef ENTT_ENTITY_COMPONENT_HPP
 #define ENTT_ENTITY_COMPONENT_HPP
 
-#include <type_traits>
 #include "../config/config.h"
 
 namespace entt {

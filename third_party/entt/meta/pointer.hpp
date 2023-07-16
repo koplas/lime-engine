@@ -1,8 +1,6 @@
 #ifndef ENTT_META_POINTER_HPP
 #define ENTT_META_POINTER_HPP
 
-#include <memory>
-#include <type_traits>
 #include "type_traits.hpp"
 
 namespace entt {

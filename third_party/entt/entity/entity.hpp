@@ -1,9 +1,6 @@
 #ifndef ENTT_ENTITY_ENTITY_HPP
 #define ENTT_ENTITY_ENTITY_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
 #include "../config/config.h"
 #include "fwd.hpp"
 

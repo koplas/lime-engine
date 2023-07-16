@@ -1,11 +1,6 @@
 #ifndef ENTT_CORE_MEMORY_HPP
 #define ENTT_CORE_MEMORY_HPP
 
-#include <cstddef>
-#include <limits>
-#include <memory>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 
 namespace entt {

@@ -1,7 +1,6 @@
 #ifndef ENTT_CORE_FLAG_HPP
 #define ENTT_CORE_FLAG_HPP
 
-#include <type_traits>
 #include "../config/config.h"
 
 namespace entt {

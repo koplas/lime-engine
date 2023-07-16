@@ -1,11 +1,6 @@
 #ifndef ENTT_ENTITY_OBSERVER_HPP
 #define ENTT_ENTITY_OBSERVER_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <limits>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../core/type_traits.hpp"
 #include "../signal/delegate.hpp"

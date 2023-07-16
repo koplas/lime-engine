@@ -1,13 +1,6 @@
 #ifndef ENTT_SIGNAL_EMITTER_HPP
 #define ENTT_SIGNAL_EMITTER_HPP
 
-#include <algorithm>
-#include <functional>
-#include <iterator>
-#include <list>
-#include <memory>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../container/dense_map.hpp"
 #include "../core/fwd.hpp"

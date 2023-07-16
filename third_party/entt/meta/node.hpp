@@ -1,9 +1,6 @@
 #ifndef ENTT_META_NODE_HPP
 #define ENTT_META_NODE_HPP
 
-#include <cstddef>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "../core/attribute.h"
 #include "../core/enum.hpp"

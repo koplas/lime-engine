@@ -1,9 +1,6 @@
 #ifndef ENTT_CORE_TUPLE_HPP
 #define ENTT_CORE_TUPLE_HPP
 
-#include <tuple>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 
 namespace entt {

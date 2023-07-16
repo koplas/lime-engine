@@ -1,8 +1,6 @@
 #ifndef ENTT_META_POLICY_HPP
 #define ENTT_META_POLICY_HPP
 
-#include <type_traits>
-
 namespace entt {
 
 /*! @brief Empty class type used to request the _as ref_ policy. */

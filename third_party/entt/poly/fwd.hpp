@@ -1,7 +1,6 @@
 #ifndef ENTT_POLY_FWD_HPP
 #define ENTT_POLY_FWD_HPP
 
-#include <type_traits>
 
 namespace entt {
 

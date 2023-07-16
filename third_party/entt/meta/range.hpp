@@ -1,8 +1,6 @@
 #ifndef ENTT_META_RANGE_HPP
 #define ENTT_META_RANGE_HPP
 
-#include <cstddef>
-#include <iterator>
 #include "../core/iterator.hpp"
 
 namespace entt {

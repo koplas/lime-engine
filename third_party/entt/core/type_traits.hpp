@@ -1,10 +1,6 @@
 #ifndef ENTT_CORE_TYPE_TRAITS_HPP
 #define ENTT_CORE_TYPE_TRAITS_HPP
 
-#include <cstddef>
-#include <iterator>
-#include <type_traits>
-#include <utility>
 #include "../config/config.h"
 #include "fwd.hpp"
 
