@@ -16,15 +16,17 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_program(GLSLC glslc HINTS /usr/bin /usr/local/bin $ENV{VULKAN_SDK}/Bin/ $ENV{VULKAN_SDK}/Bin32/)
 
-include_directories(third_party/)
+include_directories(third_party/include)
 
 set(CMAKE_CURRENT_SOURCE_DIR "src/")
 file(GLOB_RECURSE ALL_MODULE_FILES
         src/*.ixx
+        third_party/src/*.ixx
 )
 
 file(GLOB_RECURSE ALL_CPP_FILES
         src/*.cpp
+        third_party/src/*.cpp
 )
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "-stdlib=libc++ -Wall -fno-rtti -mavx2 -fno-exceptions -fomit-frame-pointer -fno-exceptions -fno-asynchronous-unwind-tables -Wno-read-modules-implicitly -Wno-nullability-completeness -ferror-limit=0")
@@ -43,11 +45,11 @@ set(GLFW_BUILD_TESTS OFF)
 set(GLFW_INSTALL OFF)
 set(GLFW_BUILD_DOCS OFF)
 
-add_subdirectory(glm/glm)
-include_directories(glm)
+add_subdirectory(third_party/glm/glm)
+include_directories(third_party/glm)
 
-add_subdirectory(glfw)
-include_directories(glfw/include)
+add_subdirectory(third_party/glfw)
+include_directories(third_party/glfw/include)
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
         "${PROJECT_SOURCE_DIR}/shaders/*.frag"
