@@ -1,4 +1,6 @@
 module;
+// c++ modules workaround
+#include <locale>
 
 #include <algorithm>
 #include <cassert>

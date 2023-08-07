@@ -1,11 +1,11 @@
 module;
 
+#include <chrono>
+#include <ctime>
 #include <filesystem>
+#include <iomanip>
 #include <iostream>
 #include <mutex>
-#include <chrono>
-#include <iomanip>
-#include <ctime>
 #include <source_location>
 
 export module lime.utils;
@@ -29,6 +29,7 @@ void find_asset_dir() {
 std::string get_time() {
     std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm ltime;
+    // Fixme localtime_r is not available on windows
     localtime_r(&t, &ltime);
     std::stringstream time_string{};
     time_string << std::put_time(&ltime, "%H:%M:%S");

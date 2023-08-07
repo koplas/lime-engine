@@ -50,7 +50,7 @@ struct TextureUpload {
 
 struct UploadThread {
     vk::CommandPool command_pool;
-    std::jthread thread;
+    std::thread thread;
     std::atomic<bool> keep_running = true;
 
     std::mutex command_queue_mutex;
@@ -496,7 +496,7 @@ export namespace lime {
         };
 
         void init_upload_thread() {
-            m_upload_thread.thread = std::jthread{&Uploader::upload_thread_entry, this};
+            m_upload_thread.thread = std::thread{&Uploader::upload_thread_entry, this};
         };
     };
 }// namespace lime

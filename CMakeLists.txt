@@ -8,7 +8,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # include(gcc_modules.cmake)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	include(msvc_modules.cmake)
+    include(msvc_modules.cmake)
 endif ()
 
 
@@ -21,17 +21,17 @@ include_directories(third_party/)
 set(CMAKE_CURRENT_SOURCE_DIR "src/")
 file(GLOB_RECURSE ALL_MODULE_FILES
         src/*.ixx
-        )
+)
 
 file(GLOB_RECURSE ALL_CPP_FILES
         src/*.cpp
-        )
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	set(CMAKE_CXX_FLAGS "-Wall -fno-rtti -mavx2 -fno-exceptions")
-	set(CMAKE_CXX_FLAGS_DEBUG "-ftime-trace -g")
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -ffast-math -fvisibility=hidden -flto")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -ffast-math")
-endif()
+)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "-stdlib=libc++ -Wall -fno-rtti -mavx2 -fno-exceptions -fomit-frame-pointer -fno-exceptions -fno-asynchronous-unwind-tables -Wno-read-modules-implicitly -Wno-nullability-completeness -ferror-limit=0")
+    set(CMAKE_CXX_FLAGS_DEBUG "-ftime-trace -g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -ffast-math -fvisibility=hidden -flto")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -ffast-math")
+endif ()
 
 find_package(Vulkan REQUIRED)
 
@@ -53,7 +53,7 @@ file(GLOB_RECURSE GLSL_SOURCE_FILES
         "${PROJECT_SOURCE_DIR}/shaders/*.frag"
         "${PROJECT_SOURCE_DIR}/shaders/*.vert"
         "${PROJECT_SOURCE_DIR}/shaders/*.comp"
-        )
+)
 
 foreach (GLSL ${GLSL_SOURCE_FILES})
     message(STATUS "BUILDING SHADER")
@@ -79,4 +79,4 @@ target_sources(lime-engine
         PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
         ${ALL_MODULE_FILES}
-        )
+)

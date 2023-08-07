@@ -12,6 +12,7 @@ export module lime.Game;
 import lime.Render;
 import lime.Window;
 import lime.utils;
+import lime.SceneManager;
 import glm;
 import vulkan;
 import entt;
@@ -71,10 +72,13 @@ export namespace lime {
 
         GameState m_game_state = {};
         entt::registry m_registry;
+        SceneManager scene_manager = {};
 
         float m_step = 0.2F;
 
         void init_scene() {
+            scene_manager.load_scene("sponza", m_registry);
+
             m_engine->load_texture("monkey");
             m_engine->load_texture("monkey_black");
 
