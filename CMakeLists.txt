@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.26)
 project(lime-engine)
 
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
-
+	set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
+if(${CMAKE_VERSION} VERSION_LESS "3.27.0")
+	set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
+endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     include(clang_modules.cmake)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
