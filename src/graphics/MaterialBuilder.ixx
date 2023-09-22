@@ -19,7 +19,7 @@ import lime.utils;
 import vulkan;
 import lime.vulkan_types;
 
-static void add_material(vk::Pipeline pipeline, vk::PipelineLayout layout, std::string const &name, std::unordered_map<std::string, lime::Material> &materials, std::list<vk::PipelineLayout> &pipeline_layouts) {
+void add_material(vk::Pipeline pipeline, vk::PipelineLayout layout, std::string const &name, std::unordered_map<std::string, lime::Material> &materials, std::list<vk::PipelineLayout> &pipeline_layouts) {
     auto it = std::ranges::find(pipeline_layouts, layout);
     if (it == pipeline_layouts.end()) {
         pipeline_layouts.push_back(layout);

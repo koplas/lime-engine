@@ -3,6 +3,7 @@ module;
 #include <GLFW/glfw3.h>
 #include <bit>
 #include <stdlib.h>
+#include <compare>
 
 
 export module lime.Window;
@@ -15,9 +16,9 @@ export struct Input {
     float cursor_y;
 };
 
-static void framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height);
-static void cursor_callback(GLFWwindow *glfw_window, double x, double y);
-static void window_focus_callback(GLFWwindow *glfw_window, int focused);
+void framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height);
+void cursor_callback(GLFWwindow *glfw_window, double x, double y);
+void window_focus_callback(GLFWwindow *glfw_window, int focused);
 
 export namespace lime {
     class Window {
@@ -93,7 +94,7 @@ export namespace lime {
     };
 }// namespace lime
 
-static void cursor_callback(GLFWwindow *glfw_window, double x, double y) {
+void cursor_callback(GLFWwindow *glfw_window, double x, double y) {
     auto *window = static_cast<lime::Window *>(glfwGetWindowUserPointer(glfw_window));
     if (!window->m_cursor_enabled) {
         window->m_cursor_x += (float) x;
@@ -103,14 +104,14 @@ static void cursor_callback(GLFWwindow *glfw_window, double x, double y) {
 }
 
 
-static void framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height) {
     (void) width;
     (void) height;
     auto *window = static_cast<lime::Window *>(glfwGetWindowUserPointer(glfw_window));
     window->m_window_resized = true;
 }
 
-static void window_focus_callback(GLFWwindow *glfw_window, int focused) {
+void window_focus_callback(GLFWwindow *glfw_window, int focused) {
     auto *window = static_cast<lime::Window *>(glfwGetWindowUserPointer(glfw_window));
     if (!focused) {
         glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

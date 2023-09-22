@@ -2,6 +2,7 @@ module;
 
 #include <condition_variable>
 #include <cstring>
+#include <bit>
 #include <mutex>
 #include <queue>
 #include <stb_image.h>

@@ -686,7 +686,7 @@ export namespace lime {
                     }
                 }
             }
-            utils::log_info("Using: " + std::string{m_gpu_properties.deviceName});
+            utils::log_info("Using: " + std::string{m_gpu_properties.deviceName.data()});
             utils::assert_true(found_device);
 
             auto queue_families = m_physical_device.getQueueFamilyProperties();
