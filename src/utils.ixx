@@ -27,12 +27,9 @@ void find_asset_dir() {
 }
 
 std::string get_time() {
-    std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm ltime;
-    // Fixme localtime_r is not available on windows
-    localtime_r(&t, &ltime);
+    std::chrono::zoned_time local_time{std::chrono::current_zone(), std::chrono::system_clock::now()};
     std::stringstream time_string{};
-    time_string << std::put_time(&ltime, "%H:%M:%S");
+    time_string << local_time;
     return time_string.str();
 }
 
