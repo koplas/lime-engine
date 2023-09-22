@@ -931,7 +931,6 @@ export namespace VULKAN_HPP_NAMESPACE
   using VULKAN_HPP_NAMESPACE::MaxPhysicalDeviceNameSize;
   using VULKAN_HPP_NAMESPACE::MaxShaderModuleIdentifierSizeExt;
   using VULKAN_HPP_NAMESPACE::QueueFamilyExternal;
-  using VULKAN_HPP_NAMESPACE::QueueFamilyForeignExt;
   using VULKAN_HPP_NAMESPACE::QueueFamilyIgnored;
   using VULKAN_HPP_NAMESPACE::Remaining3DSlicesExt;
   using VULKAN_HPP_NAMESPACE::RemainingArrayLayers;
