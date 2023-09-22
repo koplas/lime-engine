@@ -1,6 +1,6 @@
-import lime.Game;
+import app;
+
 
 int main() {
-    lime::Game game = {};
-    game.run();
+    return app_main();
 }
