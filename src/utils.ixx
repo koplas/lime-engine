@@ -27,9 +27,10 @@ void find_asset_dir() {
 }
 
 std::string get_time() {
-    std::chrono::zoned_time local_time{std::chrono::current_zone(), std::chrono::system_clock::now()};
+    auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto tm = gmtime(&time);
     std::stringstream time_string{};
-    time_string << local_time;
+    time_string << "[" << tm->tm_hour << ":" << tm->tm_min << ":" << tm->tm_sec << "]";
     return time_string.str();
 }
 

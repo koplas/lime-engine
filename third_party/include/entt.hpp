@@ -5855,26 +5855,26 @@ template<typename Type>
 }
 
 template<typename Type, auto = stripped_type_name<Type>().find_first_of('.')>
-[[nodiscard]] static constexpr std::string_view type_name(int) noexcept {
+[[nodiscard]] constexpr std::string_view type_name(int) noexcept {
     constexpr auto value = stripped_type_name<Type>();
     return value;
 }
 
 template<typename Type>
-[[nodiscard]] static std::string_view type_name(char) noexcept {
+[[nodiscard]] std::string_view type_name(char) noexcept {
     static const auto value = stripped_type_name<Type>();
     return value;
 }
 
 template<typename Type, auto = stripped_type_name<Type>().find_first_of('.')>
-[[nodiscard]] static constexpr id_type type_hash(int) noexcept {
+[[nodiscard]] constexpr id_type type_hash(int) noexcept {
     constexpr auto stripped = stripped_type_name<Type>();
     constexpr auto value = hashed_string::value(stripped.data(), stripped.size());
     return value;
 }
 
 template<typename Type>
-[[nodiscard]] static id_type type_hash(char) noexcept {
+[[nodiscard]] id_type type_hash(char) noexcept {
     static const auto value = [](const auto stripped) {
         return hashed_string::value(stripped.data(), stripped.size());
     }(stripped_type_name<Type>());
@@ -11827,7 +11827,7 @@ namespace internal {
 
 // waiting for C++20 (and std::popcount)
 template<typename Type>
-static constexpr int popcount(Type value) noexcept {
+constexpr int popcount(Type value) noexcept {
     return value ? (int(value & 1) + popcount(value >> 1)) : 0;
 }
 
@@ -13067,7 +13067,7 @@ namespace internal {
 
 // waiting for C++20 (and std::popcount)
 template<typename Type>
-static constexpr int popcount(Type value) noexcept {
+constexpr int popcount(Type value) noexcept {
     return value ? (int(value & 1) + popcount(value >> 1)) : 0;
 }
 
