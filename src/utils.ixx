@@ -26,11 +26,19 @@ void find_asset_dir() {
     ASSET_DIR = dir;
 }
 
+std::string pad_num(int n) {
+    if (n >= 10) {
+        return std::to_string(n);
+    } else {
+        return "0" + std::to_string(n);
+    }
+}
+
 std::string get_time() {
     auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     auto tm = gmtime(&time);
     std::stringstream time_string{};
-    time_string << "[" << tm->tm_hour << ":" << tm->tm_min << ":" << tm->tm_sec << "]";
+    time_string << "[" << pad_num(tm->tm_hour) << ":" << pad_num(tm->tm_min) << ":" << pad_num(tm->tm_sec) << "]";
     return time_string.str();
 }
 
